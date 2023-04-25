@@ -11,13 +11,13 @@ import { GetTasksFilterDto } from "./dto/get-tasks-filter.dto";
 export class TaskRepository {
     constructor(
         @InjectRepository(Task)
-        private taskRepository: Repository<Task>,
+        private db: Repository<Task>,
     ) { }
 
 
     async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
         const { status, search } = filterDto;
-        const query = this.taskRepository.createQueryBuilder('task');
+        const query = this.db.createQueryBuilder('task');
         if (status) {
             query.andWhere('status = :status', { status });
         }
@@ -36,18 +36,18 @@ export class TaskRepository {
 
     async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
         const { title, description } = createTaskDto;
-        const task = this.taskRepository.create({
+        const task = this.db.create({
             title,
             description,
             status: TaskStatus.OPEN
         });
 
-        await this.taskRepository.save(task);
+        await this.db.save(task);
         return task;
     }
 
     async findTaskById(id: string): Promise<Task> {
-        const found = await this.taskRepository.findOne({
+        const found = await this.db.findOne({
             where: { id }
         });
         if (!found) {
@@ -57,11 +57,11 @@ export class TaskRepository {
     }
 
     async deleteTask(id: string): Promise<DeleteResult> {
-        return this.taskRepository.delete(id);
+        return this.db.delete(id);
     }
 
     async save(task: Task) {
-        return this.taskRepository.save(task);
+        return this.db.save(task);
     }
 
 }
