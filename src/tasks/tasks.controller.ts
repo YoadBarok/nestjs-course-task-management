@@ -12,13 +12,12 @@ import {
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
-import { TaskStatus } from './task-status.enum';
 import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
-import { DeleteResult, FindOneOptions } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/auth/user.entity';
-import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from '../auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
 import { Logger } from '@nestjs/common';
 
 @Controller('tasks')
@@ -34,7 +33,9 @@ export class TasksController {
     @GetUser() user: User,
   ): Promise<Task[]> {
     this.logger.verbose(
-      `User: "${user.username}" is getting all task. Filters: ${JSON.stringify(filterDto)}`,
+      `User: "${user.username}" is getting all task. Filters: ${JSON.stringify(
+        filterDto,
+      )}`,
     );
     return this.tasksService.getTasks(filterDto, user);
   }
@@ -52,6 +53,11 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
+    this.logger.verbose(
+      `User "${user.username}" is creating the task. Data: ${JSON.stringify(
+        createTaskDto,
+      )}`,
+    );
     return this.tasksService.createTask(createTaskDto, user);
   }
 

@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Task } from 'src/tasks/task.entity';
+import { Task } from '../tasks/task.entity';
 import {
   Column,
   CreateDateColumn,
